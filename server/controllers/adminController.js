@@ -39,6 +39,22 @@ const addProduct = async (req, res) => {
      }
      res.status(201).json(newProduct);
 }
+const getProducts = async (req, res) => {
+     const products = await Product.find();
+     if (!products) {
+          res.status(404);
+          throw new Error('No Products Found!');
+     }    
+     res.status(200).json(products);
+}
+const getProductById = async (req, res) => {
+     const product = await Product.findById(req.params.gid);
+     if (!product) {
+          res.status(404);
+          throw new Error('Product Not Found!');
+     }
+     res.status(200).json(product);
+}
 
 const addCustomer = async (req, res) => {
     const { name, phone, email } = req.body;
@@ -114,55 +130,117 @@ const deleteCategory = async (req, res) => {
     res.status(404);
     throw new Error('Category Not Found!');
   }
-     res.status(200).json({
-     _id: req.params.did,
-     message: "Category Removed Successfully!"
-     });
+     res.status(200).json(category);
 }
 
 const createOrder = async (req, res) => {
 
-     const { shopId, customerId, totalAmount, discount } = req.body;
-     // console.log('first', req.body);
+   const { shopId, categoryId,  products, discount } = req.body;
 
-      const product = await Product.findById(req.params.gid);
+    if (!products || !products.length) {
+      return res.status(400)
+      throw new Error( "Products are required" );
+    }
 
-          if (!product) {
-               res.status(404);
-               throw new Error('Product Not Found!');
-          }
-      
+    let totalAmount = 0;
+
+    // Validate products & calculate subtotal
+    const orderProducts = [];
+    for (let item of products) {
+      const product = await Product.findById(item.productId);
+      if (!product) {
+        return res.status(404)
+        throw new Error( `Product not found: ${item.productId}` );
+      }
+
+      const subtotal = item.quantity * item.price;
+      totalAmount += subtotal;
+
+      orderProducts.push({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.price,
+        subtotal,
+      });
+    }
+
+    // Apply discount if available
+    const finalAmount = totalAmount - (discount || 0);
+
     const newOrder = await Order.create({
       shopId,
-      customerId,
-      products: product._id, // Assuming products is an array of product IDs
-      totalAmount,
-      discount, 
+      categoryId,
+      products: orderProducts,
+      totalAmount: finalAmount,
+      discount: discount || 0,
     });
 
-    res.status(200).json(newOrder);
-    console.log(`Order created successfully for shop  `, newOrder);
+    res.status(201).json(newOrder);
+    console.log("✅ Order created successfully:", newOrder);
 }
 const getOrders = async (req, res) => {
-     res.send("get all Order");
+     const Orders = await Order.find().populate('shopId').populate('categoryId')
+     if (!Orders) {
+          res.status(404);
+          throw new Error('No Orders Found!');
+     }
+     res.status(200).json(Orders)
 }
 const getOrderById = async (req, res) => {
-     res.send("get Order by Id");
+     
+     const order = await Order.findById(req.params.oid).populate('shopId').populate('categoryId')
+     if (!order) {
+          res.status(404)
+          throw new Error('No Order Id Found')
+     }
+     res.status(200).json(order)
 }
 const updateOrder = async (req, res) => {
-     res.send("Update Order");
+     const updateOrder = await Order.findByIdAndUpdate(req.params.uid, req.body, { new: true})
+     if (!updateOrder) {
+          res.status(500)
+          throw new Error('No Order Found')
+     }
+     res.status(200).json(updateOrder)
 }
 const deleteOrder = async (req, res) => {
-     res.send("Delete Order");
+     const deleteOrder = await Order.findByIdAndDelete(req.params.did)
+     if (!deleteOrder) {
+          res.status(500)
+          throw new Error('Oder no found for delete')
+     }
+     res.status(200).json(deleteOrder)
 }
 const createBulkOrders = async (req, res) => {
      res.send("Create Bulk Orders");
 }
 const getOrderReceipt = async (req, res) => {
-     res.send("Get Order Receipt");
+     const { orderId } = req.params;
+
+    const order = await Order.findById(orderId)
+      .populate("shopId", "name")
+      .populate("categoryId", "name")
+      .populate("products.productId", "name price");
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.status(200).json(order);
 }
 const processOrderReturn = async (req, res) => {
-     res.send("Process Order Return");
+      const { orderId } = req.params;
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Change order status to Cancelled/Returned
+    order.status = "Cancelled";
+    await order.save();
+
+    res.status(200).json(order);
 }
 
 
@@ -170,6 +248,8 @@ const processOrderReturn = async (req, res) => {
  module.exports = {
      createShop,
      addProduct,
+     getProducts,
+     getProductById,
      addCustomer,
 
   addCategory,
