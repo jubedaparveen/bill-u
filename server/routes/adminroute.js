@@ -34,7 +34,7 @@ const {
 } = require('../controllers/adminController');
 
 const adminProtect = require('../middlewares/adminmiddleware');
-const { create } = require('../models/categorymodel');
+
 
 adminRouter.post('/create-shop', adminProtect, createShop); 
 adminRouter.post('/customer', adminProtect, addCustomer);

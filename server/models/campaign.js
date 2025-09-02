@@ -1,8 +1,8 @@
-const mongoose = require('mangoose')
+const mongoose = require('mongoose');
 
 const campaignSchema = new mongoose.Schema({
      shopId:{
-          type: mongoose.Schema.types.objectId,
+          type: mongoose.Schema.Types.ObjectId,
           ref:'Shop',
           reqired: true
      },
@@ -26,8 +26,8 @@ const campaignSchema = new mongoose.Schema({
      },
      status:{
           type:String,
-          enum:['active', 'paused', 'draft', 'completed'],
-          default: 'draft'
+          enum:['active', 'paused',  'completed'],
+          default: 'active'
      },
 },{ timestamps: true})
 

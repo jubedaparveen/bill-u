@@ -1,3 +1,4 @@
+const Campaign = require("../models/campaign");
 const Category = require("../models/categorymodel");
 const Customer = require("../models/customermodel");
 const Order = require("../models/ordermodel");
@@ -279,19 +280,63 @@ const processOrderReturn = async (req, res) => {
 
 
 const addCampaign = async (req, res) =>{
-     res.send('add Campaign')
+     const { shopId, title, message, channels, target } = req.body;
+
+    // ✅ Validate required fields
+    if (!shopId || !title || !message || !channels || !target) {
+      return res.status(400).json({ message: "Please fill all the fields" });
+    }
+
+    // ✅ Create new campaign
+    const newCampaign = await Campaign.create({
+      shopId,
+      title,
+      message,
+      channels,
+      target,
+    });
+
+    res.status(201).json(newCampaign);
 }
 const getCampaigns = async (req, res) =>{
-     res.send('Get Campaigens')
+     const campaign = await Campaign.find().populate('shopId')
+     if (!campaign) {
+          res.status(500)
+          throw new Error('campaign not found')
+     }
+     res.status(200).json(campaign)
 }
 const getCampaignById = async (req, res) =>{
-     res.send('Get Campaigens By Id')
-}
-const importCampaign = async (req, res) =>{
-     res.send('Import Campaigens')
+     const campaign = await Campaign.findById(req.params.cid)
+     console.log('campaign....', campaign)
+     if (!campaign) {
+          res.status(500)
+          throw new Error('campaign not found')
+     }
+     res.status(200).json(campaign)
 }
 const deleteCampaign = async (req, res) =>{
-     res.send('Delete Campaigens')
+     const campaign = await Campaign.findByIdAndDelete(req.params.did)
+     console.log('campaign....', campaign)
+     if (!campaign) {
+          res.status(500)
+          throw new Error('campaign not found')
+     }
+     res.status(200).json(campaign)
+}
+const importCampaign = async (req, res) =>{
+      const { campaigns } = req.body; // expecting an array of campaigns
+
+    if (!campaigns ) {
+      return res.status(400)
+      throw new Error( "Please provide campaigns array" );
+    }
+
+    // Insert multiple campaigns at once
+    const newCampaigns = await Campaign.insertMany(campaigns);
+
+    res.status(201).json( newCampaigns.length, newCampaigns,
+    );
 }
 const campaignUpdateStatus = async (req, res) =>{
      res.send(' Campaigens update Status')
@@ -340,5 +385,4 @@ const campaignAnalytics = async (req, res) =>{
   campaignUpdateStatus,
   campaignReciplents,
   campaignAnalytics,
-
 };
