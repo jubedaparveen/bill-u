@@ -1,6 +1,6 @@
 import React from 'react';
 import { RefreshCcw } from 'lucide-react';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 const Header = ({ title = "Dashboard" }) => {
   const { user } = useAuth();

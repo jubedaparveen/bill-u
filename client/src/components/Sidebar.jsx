@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Store, Users, FileText, Settings, BarChart2, LogOut } from 'lucide-react';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../context/AuthContext';
 import LogoImage from "../images/Group 106 (1).svg";
 
 const navItems = [

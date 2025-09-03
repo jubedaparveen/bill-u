@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../components/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import BgImage from "../images/Group 145.svg"; 
 import LogoImage from "../images/Group 106.svg"; 
 import LockImage from "../images/material-symbols_lock.svg"; 
@@ -14,7 +14,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/otp");
+      navigate("/");
     }
   }, [user, navigate]);
 

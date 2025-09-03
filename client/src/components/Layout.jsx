@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
-import { useAuth } from "./AuthContext";
 import { Link, useLocation } from "react-router-dom";
 import LogoImage from "../images/Group 106 (1).svg";
 
@@ -16,7 +15,6 @@ import {
 
 const Layout = ({ children }) => {
   const [navOpen, setNavOpen] = useState(false);
-  const { logout } = useAuth();
   const navItems = [
     { icon: LayoutDashboard, name: "Dashboard", path: "/" },
     { icon: Store, name: "Shop Control", path: "/shop-control" },
@@ -27,7 +25,12 @@ const Layout = ({ children }) => {
   ];
   const location = useLocation();
 
-  // Dummy logout handler removed; using context logout
+  // Dummy logout handler
+  const handleLogout = () => {
+    // Add your logout logic here
+    alert("Logged out!");
+    setNavOpen(false);
+  };
 
   return (
     <div className="flex h-screen bg-gray-50 font-sans relative">
