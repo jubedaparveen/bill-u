@@ -1,12 +1,16 @@
-const mongoose = require('mongoose');
+const { mongoose } = require("mongoose");
 
 const shopSchema = new mongoose.Schema({
-    name : {
-        type :String,
-        required:true
+    shopId:{
+    type:String,
+    unique:true
+    },
+    shopName :{
+    type :String,
+    required:true
     },
     owner : {
-        type: String,
+        type:String,
         required:true
     },
     email: {
@@ -17,36 +21,19 @@ const shopSchema = new mongoose.Schema({
     status:{
         type:Boolean,
         default:false
-    }},{timeStamps:true})
- 
+    }
+
+},{
+    timestamps:true
+})
+
+shopSchema.pre('save', async function(next) {
+    if (!this.shopId) {
+        const count = await mongoose.model('Shop').countDocuments() + 1;
+        this.shopId = `shop-${count.toString().padStart(3, '0')}`;
+    }
+    next();
+});
+
+
 module.exports = mongoose.model("Shop" , shopSchema)
- 
-
-
-// name: {   
-//           type: String,
-//           required: true,
-//      },
-//      email: {
-//           type: String,
-//           required: true,
-//           unique: true,
-//      },
-//      phone: {
-//           type: String,
-//           required: true,
-//           unique: true,
-//      },
-//      address: {
-//           type: String,
-//           required: true,
-//      },
-//      owner: {
-//           type: mongoose.Schema.Types.ObjectId,
-//           ref: 'User',
-//           required: true,
-//      },
-//      isActive: {
-//           type: Boolean,
-//           default: false,
-//      },
