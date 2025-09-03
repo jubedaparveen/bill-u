@@ -1,6 +1,68 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { FaEdit } from 'react-icons/fa'
+
+const initialData = {
+  adminId: "#65165151",
+  username: "Murlidhar store",
+  firstName: "Murlidhar",
+  lastName: "Shukla",
+  email: "Murlidhar7987@mail.com",
+  phone: "+91 989 238 344",
+  address: "123 Vijay Nagar Main Road, Opposite C21 Mall, Indore, Madhya Pradesh",
+  city: "Indore",
+  state: "Madhya Pradesh",
+  country: "India",
+  postalCode: "452010",
+  roles: ["Manager", "Inventory Manager", "Customer Manager"],
+  status: "Active",
+};
+
+const roleOptions = [
+  {
+    role: "Manager",
+    desc: "Operations + team oversight, no settings control",
+  },
+  {
+    role: "Inventory Manager",
+    desc: "Stock management manages inventory.",
+  },
+  {
+    role: "Campaign Creator",
+    desc: "Can create and manage marketing campaigns, discount offers, and coupon codes.",
+  },
+  {
+    role: "Customer Manager",
+    desc: "Can add, edit, and delete customer records, and view purchase history.",
+  },
+];
 
 const EditAdmin = () => {
+  const [form, setForm] = useState(initialData);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleRoleChange = (role) => {
+    setForm((prev) => ({
+      ...prev,
+      roles: prev.roles.includes(role)
+        ? prev.roles.filter((r) => r !== role)
+        : [...prev.roles, role],
+    }));
+  };
+
+  const handleStatusChange = (e) => {
+    setForm((prev) => ({
+      ...prev,
+      status: e.target.value,
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center p-4">
       <div className="bg-white rounded-2xl shadow-lg max-w-5xl w-full p-6 md:p-10">
@@ -32,7 +94,8 @@ const EditAdmin = () => {
             <input
               type="text"
               className="w-full mt-1 p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              value="#65165151"
+              value={form.adminId}
+              name="adminId"
               readOnly
             />
           </div>
@@ -43,7 +106,9 @@ const EditAdmin = () => {
             <input
               type="text"
               className="w-full mt-1 p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              value="Murlidhar store"
+              value={form.username}
+              name="username"
+              onChange={handleChange}
             />
           </div>
 
@@ -55,7 +120,9 @@ const EditAdmin = () => {
             <input
               type="text"
               className="w-full mt-1 p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              value="Murlidhar"
+              value={form.firstName}
+              name="firstName"
+              onChange={handleChange}
             />
           </div>
           <div>
@@ -65,7 +132,9 @@ const EditAdmin = () => {
             <input
               type="text"
               className="w-full mt-1 p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              value="Shukla"
+              value={form.lastName}
+              name="lastName"
+              onChange={handleChange}
             />
           </div>
 
@@ -77,7 +146,9 @@ const EditAdmin = () => {
             <input
               type="email"
               className="w-full mt-1 p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              value="Murlidhar7987@mail.com"
+              value={form.email}
+              name="email"
+              onChange={handleChange}
             />
           </div>
           <div>
@@ -87,7 +158,9 @@ const EditAdmin = () => {
             <input
               type="text"
               className="w-full mt-1 p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              value="+91 989 238 344"
+              value={form.phone}
+              name="phone"
+              onChange={handleChange}
             />
           </div>
 
@@ -99,7 +172,9 @@ const EditAdmin = () => {
             <textarea
               rows="2"
               className="w-full mt-1 p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              value="123 Vijay Nagar Main Road, Opposite C21 Mall, Indore, Madhya Pradesh"
+              value={form.address}
+              name="address"
+              onChange={handleChange}
             />
           </div>
 
@@ -109,7 +184,9 @@ const EditAdmin = () => {
             <input
               type="text"
               className="w-full mt-1 p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              value="Indore"
+              value={form.city}
+              name="city"
+              onChange={handleChange}
             />
           </div>
           <div>
@@ -117,7 +194,9 @@ const EditAdmin = () => {
             <input
               type="text"
               className="w-full mt-1 p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              value="Madhya Pradesh"
+              value={form.state}
+              name="state"
+              onChange={handleChange}
             />
           </div>
           <div>
@@ -127,7 +206,9 @@ const EditAdmin = () => {
             <input
               type="text"
               className="w-full mt-1 p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              value="India"
+              value={form.country}
+              name="country"
+              onChange={handleChange}
             />
           </div>
           <div>
@@ -137,7 +218,9 @@ const EditAdmin = () => {
             <input
               type="text"
               className="w-full mt-1 p-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              value="452010"
+              value={form.postalCode}
+              name="postalCode"
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -146,35 +229,15 @@ const EditAdmin = () => {
         <div className="mt-6">
           <label className="text-sm font-semibold text-gray-700">Roles</label>
           <div className="mt-3 space-y-2">
-            {[
-              {
-                role: "Manager",
-                desc: "Operations + team oversight, no settings control",
-                checked: true,
-              },
-              {
-                role: "Inventory Manager",
-                desc: "Stock management manages inventory.",
-                checked: true,
-              },
-              {
-                role: "Campaign Creator",
-                desc: "Can create and manage marketing campaigns, discount offers, and coupon codes.",
-                checked: false,
-              },
-              {
-                role: "Customer Manager",
-                desc: "Can add, edit, and delete customer records, and view purchase history.",
-                checked: true,
-              },
-            ].map((item, index) => (
+            {roleOptions.map((item) => (
               <label
-                key={index}
+                key={item.role}
                 className="flex items-start space-x-2 text-gray-700"
               >
                 <input
                   type="checkbox"
-                  defaultChecked={item.checked}
+                  checked={form.roles.includes(item.role)}
+                  onChange={() => handleRoleChange(item.role)}
                   className="mt-1 accent-yellow-400"
                 />
                 <span>
@@ -193,7 +256,9 @@ const EditAdmin = () => {
               <input
                 type="radio"
                 name="status"
-                defaultChecked
+                value="Active"
+                checked={form.status === "Active"}
+                onChange={handleStatusChange}
                 className="accent-green-500"
               />
               <span className="text-green-600 font-medium flex items-center gap-1">
@@ -204,6 +269,9 @@ const EditAdmin = () => {
               <input
                 type="radio"
                 name="status"
+                value="Inactive"
+                checked={form.status === "Inactive"}
+                onChange={handleStatusChange}
                 className="accent-red-500"
               />
               <span className="text-red-600 font-medium flex items-center gap-1">
@@ -224,7 +292,7 @@ const EditAdmin = () => {
         </div>
       </div>
     </div>
-      )
-}
+  );
+};
 
-export default EditAdmin
+export default EditAdmin;
