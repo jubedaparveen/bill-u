@@ -1,17 +1,16 @@
+// src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 import OtpPage from "./pages/OtpPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 import AdminsPage from "./pages/AdminsPage";
-// import EditAdminPage from "./pages/EditAdminPage";
 import ProtectedRoute from "./components/ProtectedRoute";
-
-// Import page components
 import ShopControlPage from "./pages/ShopControlPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
-// import AuditLogsPage from "./pages/AuditLogsPage";
 import SettingsPage from "./pages/SettingsPage";
 import EditAdmin from "./components/EditAdmin";
 
@@ -20,7 +19,10 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/otp" element={<OtpPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+
         <Route
           path="/*"
           element={
@@ -32,7 +34,6 @@ function App() {
                   <Route path="/admins" element={<AdminsPage />} />
                   <Route path="/admins/edit" element={<EditAdmin />} />
                   <Route path="/analytics" element={<AnalyticsPage />} />
-                  {/* <Route path="/audit-logs" element={<AuditLogsPage />} /> */}
                   <Route path="/settings" element={<SettingsPage />} />
                 </Routes>
               </Layout>

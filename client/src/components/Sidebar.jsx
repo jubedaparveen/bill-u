@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Store, Users, FileText, Settings, BarChart2, LogOut } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useDispatch } from 'react-redux';
+import { logout } from '../features/auth/authSlice';  // 🔹 Redux logout
 import LogoImage from "../images/Group 106 (1).svg";
 
 const navItems = [
@@ -16,27 +17,44 @@ const navItems = [
 const Sidebar = ({ onClose, mobile }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
-    logout();
+    dispatch(logout()); // 🔹 clears Redux + localStorage
     navigate('/login');
     if (mobile && onClose) onClose();
   };
 
   return (
     <aside
-      className={`w-64 flex-shrink-0 bg-white shadow-gray-500 shadow-lg z-50 rounded-r-xl flex flex-col h-full relative ${mobile ? 'fixed left-0 top-0 h-full animate-slide-in' : ''}`}
+      className={`w-64 flex-shrink-0 bg-white shadow-gray-500 shadow-lg z-50 rounded-r-xl flex flex-col h-full relative ${
+        mobile ? 'fixed left-0 top-0 h-full animate-slide-in' : ''
+      }`}
       style={mobile ? { minHeight: '100vh' } : {}}
     >
       <div className="h-20 flex items-center px-8 justify-between">
-        <h1 className=" font-bold text-gray-900">
-         <img src={LogoImage} alt="" className='' />
+        <h1 className="font-bold text-gray-900">
+          <img src={LogoImage} alt="logo" />
         </h1>
         {mobile && (
-          <button onClick={onClose} className="ml-4 p-2 rounded-full hover:bg-gray-100 focus:outline-none">
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-gray-700">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <button
+            onClick={onClose}
+            className="ml-4 p-2 rounded-full hover:bg-gray-100 focus:outline-none"
+          >
+            <svg
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              className="text-gray-700"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         )}
@@ -56,7 +74,9 @@ const Sidebar = ({ onClose, mobile }) => {
                   }`}
                   onClick={mobile ? onClose : undefined}
                 >
-                  <item.icon className={`w-5 h-5 mr-3 ${isActive ? 'text-yellow-400' : ''}`} />
+                  <item.icon
+                    className={`w-5 h-5 mr-3 ${isActive ? 'text-yellow-400' : ''}`}
+                  />
                   <span>{item.name}</span>
                 </Link>
               </li>
@@ -64,7 +84,7 @@ const Sidebar = ({ onClose, mobile }) => {
           })}
         </ul>
       </nav>
-      {/* Logout button at the bottom, always visible */}
+      {/* Logout button at the bottom */}
       <div className="px-6 pb-6 mt-auto">
         <button
           className="flex items-center justify-center gap-2 w-full py-3 mb-4 bg-red-50 text-red-600 hover:bg-red-100 transition rounded-lg"

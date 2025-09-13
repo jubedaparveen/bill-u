@@ -1,35 +1,35 @@
+// src/pages/OtpPage.jsx
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
 import LogoImage from "../images/Group 106.svg";
 import BgImage from "../images/Group 145.svg";
+import { useVerifyOtpMutation, useGenerateOtpMutation } from "../features/auth/authService";
 
 const OtpPage = () => {
-  const [otpValues, setOtpValues] = useState(["", "", "", "", "", ""]);
-  const [timeLeft, setTimeLeft] = useState(30);
-  const [isResending, setIsResending] = useState(false);
-  const { verifyOtp, verifyOtpStatus, verifyOtpError, isOtpVerified, user, generateOtp, generateOtpStatus, generateOtpError } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
+  const emailFromState = location.state?.email || "";
+  const [email, setEmail] = useState(emailFromState);
+
+  const [otpValues, setOtpValues] = useState(["", "", "", "", "", ""]);
+  const [timeLeft, setTimeLeft] = useState(60); // 1 minute
+  const [isResending, setIsResending] = useState(false);
+
+  const [verifyOtp, { isLoading: verifying, error: verifyError }] = useVerifyOtpMutation();
+  const [generateOtp, { isLoading: generating, error: generateError }] = useGenerateOtpMutation();
 
   useEffect(() => {
-    if (isOtpVerified) {
-      navigate("/");
+    // If nobody passed email, redirect back to forgot page
+    if (!email) {
+      navigate("/forgot-password");
     }
-  }, [isOtpVerified, navigate]);
+  }, [email, navigate]);
 
   useEffect(() => {
     if (timeLeft <= 0) return;
-    
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prev - 1;
-      });
+      setTimeLeft((prev) => (prev <= 1 ? 0 : prev - 1));
     }, 1000);
-
     return () => clearInterval(timer);
   }, [timeLeft]);
 
@@ -39,7 +39,6 @@ const OtpPage = () => {
       newOtpValues[index] = value;
       setOtpValues(newOtpValues);
 
-      // Auto-focus next input
       if (value && index < 5) {
         const nextInput = document.getElementById(`otp-${index + 1}`);
         if (nextInput) nextInput.focus();
@@ -47,42 +46,39 @@ const OtpPage = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const otp = otpValues.join("");
-    if (user?.email && otp.length === 6) {
-      verifyOtp({ email: user.email, otp });
-    }
-  };
-
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const otp = otpValues.join("");
+    if (!email || otp.length !== 6) return;
+    try {
+      await verifyOtp({ email, otp }).unwrap();
+      // on success navigate to reset password
+      navigate("/reset-password", { state: { email } });
+    } catch (err) {
+      console.error("OTP verification failed:", err);
+    }
   };
 
   const handleResendOtp = async () => {
-    if (user?.email) {
-      try {
-        setIsResending(true);
-        
-        // Clear existing OTP values
-        setOtpValues(["", "", "", "", "", ""]);
-        
-        // Reset timer
-        setTimeLeft(30);
-        
-        // Call backend to generate new OTP
-        await generateOtp({ email: user.email });
-        
-        // Reset resending state after a short delay
-        setTimeout(() => {
-          setIsResending(false);
-        }, 1000);
-      } catch (error) {
-        console.error("Failed to resend OTP:", error);
+    if (!email) return;
+    try {
+      setIsResending(true);
+      setOtpValues(["", "", "", "", "", ""]);
+      setTimeLeft(60);
+      await generateOtp({ email }).unwrap();
+      // small delay to show sending
+      setTimeout(() => {
         setIsResending(false);
-      }
+      }, 700);
+    } catch (err) {
+      console.error("Failed to resend OTP:", err);
+      setIsResending(false);
     }
   };
 
@@ -142,13 +138,15 @@ const OtpPage = () => {
                   <button
                     type="button"
                     onClick={handleResendOtp}
-                    disabled={timeLeft > 0 || isResending}
+                    disabled={timeLeft > 0 || isResending || generating}
                     className="text-xs hover:underline focus:outline-none disabled:text-gray-400 disabled:cursor-not-allowed"
                   >
-                    {isResending ? 'Sending...' : 'Resend OTP'}
+                    {isResending || generating ? "Sending..." : "Resend OTP"}
                   </button>
-                  {generateOtpError && (
-                    <div className="text-red-500 text-xs mt-1">{generateOtpError.message}</div>
+                  {(generateError || verifyError) && (
+                    <div className="text-red-500 text-xs mt-1">
+                      {generateError?.data?.message || verifyError?.data?.message || "Something went wrong"}
+                    </div>
                   )}
                 </div>
 
@@ -156,13 +154,12 @@ const OtpPage = () => {
                   <button
                     type="submit"
                     className="w-[35%] py-2.5 bg-yellow-400 text-xs text-gray-900 rounded-xl shadow-sm hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50"
-                    disabled={verifyOtpStatus === 'pending' || otpValues.join("").length !== 6}
+                    disabled={verifying || otpValues.join("").length !== 6}
                   >
-                    {verifyOtpStatus === 'pending' ? 'Verifying...' : 'Verify'}
+                    {verifying ? 'Verifying...' : 'Verify'}
                   </button>
                 </div>
                 
-                {verifyOtpError && <div className="text-red-500 text-center text-sm">{verifyOtpError.message}</div>}
               </form>
             </div>
           </div>
@@ -173,4 +170,3 @@ const OtpPage = () => {
 };
 
 export default OtpPage;
-
