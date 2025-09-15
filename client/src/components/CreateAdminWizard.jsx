@@ -234,6 +234,7 @@ const CreateAdminWizard = ({ open, onClose, onSubmit }) => {
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     placeholder="e.g. +91 989 238 344"
+                    required
                     className="w-[30%] px-2 py-1.5 text-sm border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                   />
                 </div>

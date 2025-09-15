@@ -7,6 +7,7 @@ import img1 from "../images/Vector.png";
 import img2 from "../images/right.svg";
 import img3 from "../images/cross.svg";
 import ShopControlStats from "../components/ShopControlStats";
+import AddShope from "../components/AddShope";
 
 const ShopControlPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,8 +33,11 @@ const ShopControlPage = () => {
     (shop) => shop.name.toLowerCase().includes(searchTerm.toLowerCase()) || shop.shopControlId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+ const [showModel , setShowModel] = useState(false)
+
+
   const handleCreateShop = () => {
-    console.log("Creating Shop...");
+    setShowModel(!showModel)
   };
 
   const handleResetFilters = () => {
@@ -54,6 +58,8 @@ const ShopControlPage = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+
 
   return (
     <div>
@@ -85,6 +91,10 @@ const ShopControlPage = () => {
             sortDropdownRef={sortDropdownRef}
           />
           <ShopControlTable shops={filteredShops} />
+
+          {
+            showModel && ( <AddShope />)
+          }
         </div>
       </div>
     </div>
