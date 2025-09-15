@@ -15,7 +15,7 @@ const Header = ({ title = "Dashboard" }) => {
         <h1 className="text-xl md:text-3xl font-bold text-gray-900">{title}</h1>
       </div>
 
-      <div className="flex items-center space-x-2 md:space-x-4">
+      <div className="flex items-center space-x-2 md:space-x-4 ">
         {/* Refresh Button */}
         <button
           aria-label="Refresh Dashboard"
