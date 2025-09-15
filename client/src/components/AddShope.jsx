@@ -8,7 +8,7 @@ const AddShope = () => {
       <div className="flex flex-col md:flex-row w-full max-w-2xl rounded-lg overflow-hidden bg-white shadow-xl">
 
         {/* Left Sidebar Steps */}
-        <div className="bg-yellow-400 w-full md:w-48 p-4 flex flex-col">
+        <div className="bg-yellow-400 w-full md:w-48 p-4 flex flex-col ">
           <div className="space-y-4 text-black font-medium text-sm">
             <div className="flex items-center space-x-2">
               <span className="w-6 h-6 rounded-md bg-black text-white flex items-center justify-center text-xs">
