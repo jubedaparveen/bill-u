@@ -93,7 +93,7 @@ const ShopControlPage = () => {
           <ShopControlTable shops={filteredShops} />
 
           {
-            showModel && ( <AddShope />)
+            showModel && ( <AddShope  handleCreateShop = {handleCreateShop}/>)
           }
         </div>
       </div>
