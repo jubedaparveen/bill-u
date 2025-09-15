@@ -99,7 +99,6 @@ const AddShope = () => {
             <div className="pt-2 flex justify-end">
               <button
                 type="submit"
-                onClick={handelPage}
                 className="bg-yellow-400 text-black font-semibold px-5 py-2 rounded-md hover:bg-yellow-500 transition-colors"
               >
                 Next Step
