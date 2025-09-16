@@ -13,6 +13,7 @@ const ShopControlPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [sortFilter, setSortFilter] = useState("Newest First");
+  const [showCreateShope , setShowCteateShop] = useState(false)
   const statusDropdownRef = useRef(null);
   const sortDropdownRef = useRef(null);
 
@@ -33,12 +34,13 @@ const ShopControlPage = () => {
     (shop) => shop.name.toLowerCase().includes(searchTerm.toLowerCase()) || shop.shopControlId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
- const [showModel , setShowModel] = useState(false)
 
+const handeleCreateShope = () => {
 
-  const handleCreateShop = () => {
-    setShowModel(!showModel)
-  };
+  showCreateShope ? setShowCteateShop(false) : setShowCteateShop(true)
+  
+}
+
 
   const handleResetFilters = () => {
     setSearchTerm("");
@@ -67,7 +69,7 @@ const ShopControlPage = () => {
       <div className="px-3.5 py-1 bg-gray-200">
         <section className="bg-white rounded-xl mt-2 px-2 md:px-8 py-8">
           <div className="flex justify-end">
-            <button onClick={handleCreateShop} className="flex items-center gap-2 px-3 py-3 bg-yellow-400 hover:bg-yellow-500 font-semibold rounded-lg transition-colors duration-200">
+            <button onClick={handeleCreateShope} className="flex items-center cursor-pointer gap-2 px-3 py-3 bg-yellow-400 hover:bg-yellow-500 font-semibold rounded-lg transition-colors duration-200">
               <Plus className="w-5 h-5" />
               Create Shop
             </button>
@@ -91,10 +93,7 @@ const ShopControlPage = () => {
             sortDropdownRef={sortDropdownRef}
           />
           <ShopControlTable shops={filteredShops} />
-
-          {
-            showModel && ( <AddShope  handleCreateShop = {handleCreateShop}/>)
-          }
+          <AddShope showCreateShope = {showCreateShope} handeleCreateShope = {handeleCreateShope} />
         </div>
       </div>
     </div>
