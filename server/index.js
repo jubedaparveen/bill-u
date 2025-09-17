@@ -15,7 +15,7 @@ app.use('/api/auth', require('./routes/authroute'));
 app.use('/api/forget-password', require('./routes/forgetpasswordroute'))
 app.use('/api/admin', require('./routes/adminroute'));
 app.use('/api/superadmin', require('./routes/superadminroutes'));
-
+app.use('/api/shops' , require("./routes/shop/shopRoutes"))
 
 //error Handler middleware
 app.use(errorHandler)
