@@ -21,7 +21,7 @@ const ShopFormThree = ({ formData, onEdit }) => {
                 information is correct, and confirm before submitting.
             </p>
 
-            <div className="flex-1">
+            <div className="flex-1 ">
                 {/* Information Section */}
                 {(formData.shopName ||
                     formData.ownerFirstName ||
@@ -30,24 +30,24 @@ const ShopFormThree = ({ formData, onEdit }) => {
                     formData.contact) && (
                         <>
                             <h3 className="text-lg font-semibold mb-2">Information</h3>
-                            <div className="relative gap-2 p-6 border border-gray-400 rounded-xl bg-white mb-2 max-w-4xl">
+                            <div className="relative gap-2 p-4 border border-gray-400 rounded-xl bg-white mb-2 max-w-4xl">
                                 {formData.shopName && (
-                                    <p className="text-xl">{formData.shopName}</p>
+                                    <p className="text-lg">Shop Name : {formData.shopName}</p>
                                 )}
 
                                 {(formData.ownerFirstName || formData.ownerLastName) && (
-                                    <p className="text-base text-[#626262] mt-2">
-                                        {formData.ownerFirstName} {formData.ownerLastName}
+                                    <p className="text-base text-[#626262]">
+                                     Full Name :  {formData.ownerFirstName} {formData.ownerLastName}
                                     </p>
                                 )}
 
                                 {formData.email && (
-                                    <p className="text-base text-[#626262]">{formData.email}</p>
+                                    <p className="text-base text-[#626262]">E-mail : {formData.email}</p>
                                 )}
 
                                 {formData.contact && (
                                     <p className="text-base text-[#626262] mt-1">
-                                        {formData.contact}
+                                       Contact :  {formData.contact}
                                     </p>
                                 )}
 
@@ -70,28 +70,28 @@ const ShopFormThree = ({ formData, onEdit }) => {
                     formData.address) && (
                         <>
                             <h3 className="text-lg font-semibold mb-2">Address</h3>
-                            <div className="relative gap-2 p-6 border border-gray-400 rounded-xl bg-white mb-2">
-                                {formData.city && <p className="text-xl">{formData.city}</p>}
+                            <div className="relative gap-2 p-4 border border-gray-400 rounded-xl bg-white mb-2">
+                                {formData.city && <p className="text-xl">City : {formData.city}</p>}
 
                                 {formData.country && (
-                                    <p className="text-[#626262]">{formData.country}</p>
+                                    <p className="text-[#626262]">Country : {formData.country}</p>
                                 )}
 
                                 {formData.state && (
                                     <p className="text-base text-[#626262] mt-2">
-                                        {formData.state}
+                                       State :  {formData.state}
                                     </p>
                                 )}
 
                                 {formData.postalCode && (
                                     <p className="text-base text-[#626262]">
-                                        {formData.postalCode}
+                                        PostalCode : {formData.postalCode}
                                     </p>
                                 )}
 
                                 {formData.address && (
                                     <p className="text-base text-[#626262] mt-1">
-                                        {formData.address}
+                                        Address : {formData.address}
                                     </p>
                                 )}
 
