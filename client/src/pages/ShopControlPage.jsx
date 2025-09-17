@@ -58,7 +58,6 @@ const ShopControlPage = () => {
   }, []);
 
 
-
   return (
     <div>
       <Header title="Shop Control" />
